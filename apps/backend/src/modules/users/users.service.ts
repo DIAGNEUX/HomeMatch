@@ -9,4 +9,11 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     return this.userRepository.create(createUserDto);
   }
+
+  async findByEmail(email: string) {
+    return this.userRepository.findByEmail(email);
+  }
+  async findById(id: string) {
+  return this.userRepository.findById(id);
+}
 }

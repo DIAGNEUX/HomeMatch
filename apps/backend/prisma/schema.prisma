@@ -28,4 +28,33 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  agency Agency? @relation
+}
+
+model Agency {
+  id          String   @id @default(cuid())
+
+  name        String   @db.VarChar(255)
+  description String?  @db.VarChar(1000)
+
+  siret       String   @unique @db.VarChar(14)
+
+  phone       String?  @db.VarChar(20)
+
+  website     String?  @db.VarChar(255)
+
+  address     String   @db.VarChar(255)
+
+  city        String   @db.VarChar(100)
+
+  postalCode  String   @db.VarChar(20)
+
+  logo        String?  @db.VarChar(255)
+
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
