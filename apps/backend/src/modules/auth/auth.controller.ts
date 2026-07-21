@@ -35,7 +35,7 @@ export class AuthController {
   }
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard , RolesGuard) 
-  @Roles(Role.USER)
+  @Roles(Role.USER, Role.AGENCY)
   @Get('me')
   getProfile(@Request() req: any) {
     return req.user;

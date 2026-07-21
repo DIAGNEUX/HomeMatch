@@ -26,11 +26,5 @@ export class RegisterDto {
   @Length(8, 20)
   phone?: string;
 
-  @ApiProperty({
-  example: 'Alioune',
-  })
-  @IsOptional()
-  @IsString()
-  @Length(2, 100)
-  username?: string;
+
 }
