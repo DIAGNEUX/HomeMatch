@@ -15,33 +15,33 @@ import {
     @IsString()
     @IsNotEmpty()
     @MaxLength(150)
-    titre: string;
+    titre!: string;
   
     @IsString()
     @IsNotEmpty()
-    description: string;
+    description!: string;
   
     @IsEnum(TypeAnnonce)
-    typeAnnonce: TypeAnnonce;
+    typeAnnonce!: TypeAnnonce;
   
     @IsEnum(TypeBien)
-    typeBien: TypeBien;
+    typeBien!: TypeBien;
   
     @IsNumber()
     @IsPositive()
-    prix: number;
+    prix!: number;
   
     @IsNumber()
     @IsPositive()
-    surface: number;
+    surface!: number;
   
     @IsInt()
     @Min(0)
-    nombrePieces: number;
+    nombrePieces!: number;
   
     @IsInt()
     @Min(0)
-    nombreSallesBains: number;
+    nombreSallesBains!: number;
   
     @IsOptional()
     @IsInt()
@@ -54,13 +54,13 @@ import {
   
     @IsInt()
     @Min(0)
-    nombreChambres: number;
+    nombreChambres!: number;
   
     @IsString()
     @IsNotEmpty()
-    adresse: string;
+    adresse!: string;
   
     @IsString()
     @IsNotEmpty()
-    ville: string;
+    ville!: string;
   }

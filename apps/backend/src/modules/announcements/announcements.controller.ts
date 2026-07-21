@@ -31,6 +31,10 @@ export class AnnouncementsController {
   @ApiBearerAuth('access-token')
   @Roles(Role.AGENCY)
   async create(@Body() dto: CreateAnnonceDto, @Req() req) {
+    console.log(req);
+
+    console.log(req.user);
+    console.log(req.user.sub);
     const agency = await this.agenciesService.findByUserId(req.user.id);
     const annonce = await this.announcementsService.createAnnonce(dto, agency.id);
 
