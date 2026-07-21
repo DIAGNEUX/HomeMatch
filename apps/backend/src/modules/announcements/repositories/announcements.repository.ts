@@ -3,6 +3,8 @@ import { PrismaService } from '../../../database/prisma.service';
 import { CreateAnnonceDto } from '../dto/create-annonce.dto';
 import { UpdateAnnonceDto } from '../dto/update-annonce.dto';
 import { Annonce } from '@prisma/client';
+import { StatutAnnonce } from '@prisma/client';
+
 
 @Injectable()
 export class AnnouncementsRepository {
@@ -41,5 +43,11 @@ export class AnnouncementsRepository {
       orderBy: { createdAt: 'desc' },
     });
   }
-  
+
+  updateStatut(id: string, statut: StatutAnnonce): Promise<Annonce> {
+    return this.prisma.annonce.update({
+      where: { id },
+      data: { statut },
+    });
+  }
 }

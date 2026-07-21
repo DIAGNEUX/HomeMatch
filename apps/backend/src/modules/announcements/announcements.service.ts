@@ -7,6 +7,7 @@ import { AnnouncementsRepository } from './repositories/announcements.repository
 import { CreateAnnonceDto } from './dto/create-annonce.dto';
 import { UpdateAnnonceDto } from './dto/update-annonce.dto';
 import { Annonce } from '@prisma/client';
+import { BadRequestException } from '@nestjs/common';
 
 @Injectable()
 export class AnnouncementsService {
@@ -59,5 +60,39 @@ export class AnnouncementsService {
   async findOneAnnonce(id: string): Promise<Annonce> {
     return this.getAnnonceOrThrow(id);
   }
+
+  private readonly requiredFields: (keyof Annonce)[] = [
+    'titre',
+    'description',
+    'typeAnnonce',
+    'typeBien',
+    'prix',
+    'surface',
+    'nombrePieces',
+    'nombreSallesBains',
+    'nombreChambres',
+    'adresse',
+    'ville',
+  ];
   
+  private checkCanPublish(annonce: Annonce): void {
+    const missingFields = this.requiredFields.filter(
+      (field) => annonce[field] === null || annonce[field] === undefined,
+    );
+  
+    if (missingFields.length > 0) {
+      throw new BadRequestException(
+        `Impossible de publier : champs manquants (${missingFields.join(', ')}).`,
+      );
+    }
+  }
+  
+  async publishAnnonce(id: string, agencyId: string): Promise<Annonce> {
+    const annonce = await this.getAnnonceOrThrow(id);
+    this.checkOwnership(annonce, agencyId);
+    this.checkCanPublish(annonce);
+  
+    return this.announcementsRepository.updateStatut(id, 'PUBLIEE');
+  }
+
 }

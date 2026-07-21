@@ -76,6 +76,11 @@ enum TypeBien {
   AUTRE
 }
 
+enum StatutAnnonce {
+  BROUILLON
+  PUBLIEE
+}
+
 model Annonce {
   id                String       @id @default(cuid())
 
@@ -108,4 +113,5 @@ model Annonce {
   @@index([ville])
   @@index([typeAnnonce, typeBien])
   @@map("annonces")
+  statut StatutAnnonce @default(BROUILLON)
 }

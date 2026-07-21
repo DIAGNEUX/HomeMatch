@@ -94,4 +94,18 @@ async findOne(@Param('id') id: string) {
     };
   }
 
+  @Patch(':id/publish')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth('access-token')
+@Roles(Role.AGENCY)
+async publish(@Param('id') id: string, @Req() req) {
+  const agency = await this.agenciesService.findByUserId(req.user.id);
+  const annonce = await this.announcementsService.publishAnnonce(id, agency.id);
+
+  return {
+    success: true,
+    data: annonce,
+  };
+}
+
 }
