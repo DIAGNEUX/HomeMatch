@@ -114,4 +114,16 @@ model Annonce {
   @@index([typeAnnonce, typeBien])
   @@map("annonces")
   statut StatutAnnonce @default(BROUILLON)
+  images Image[]
+}
+
+model Image {
+  id        String   @id @default(cuid())
+  url       String
+  annonceId String
+  annonce   Annonce  @relation(fields: [annonceId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([annonceId])
+  @@map("images")
 }
