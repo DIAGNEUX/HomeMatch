@@ -1,25 +1,25 @@
-import type { PropertyTableItem } from "./properties-table-data";
+import type { Annonce } from "@/types/announcement";
 
-export type PropertyTableColumn = {
-  key: keyof Pick<PropertyTableItem, "title" | "location" | "price" | "status">;
+export type AnnonceTableColumn = {
+  key: keyof Pick<Annonce, "titre" | "ville" | "prix" | "statut">;
   label: string;
 };
 
-export const propertyTableColumns: PropertyTableColumn[] = [
+export const annonceTableColumns: AnnonceTableColumn[] = [
   {
-    key: "title",
+    key: "titre",
     label: "Bien",
   },
   {
-    key: "location",
+    key: "ville",
     label: "Ville",
   },
   {
-    key: "price",
+    key: "prix",
     label: "Prix",
   },
   {
-    key: "status",
+    key: "statut",
     label: "Statut",
   },
 ];
