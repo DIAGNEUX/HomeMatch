@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import InputField from "@/components/ui/InputField";
+import { Button } from "@/components/ui/button";
 import { registerSchema } from "@/validation/register.schema";
 import { RegisterDto } from "@/types/auth";
 
@@ -77,13 +78,13 @@ export default function AccountForm({
         error={errors.confirmPassword?.message}
       />
 
-      <button
+      <Button
         type="submit"
         disabled={isSubmitting}
-        className="w-full rounded-md bg-black py-2 text-white"
+        className="h-12 w-full cursor-pointer rounded-2xl bg-primary px-4 font-semibold text-white hover:bg-primary-800"
       >
         Continuer
-      </button>
+      </Button>
     </form>
   );
 }

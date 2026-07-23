@@ -1,4 +1,3 @@
-﻿import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 
 interface WelcomeCardProps {
@@ -7,9 +6,9 @@ interface WelcomeCardProps {
 
 export default function WelcomeCard({ firstName }: WelcomeCardProps) {
   return (
-    <Card className="space-y-8 bg-gradient-to-br from-accent/10 via-white to-white">
+    <Card className="agency-welcome-card space-y-8">
       <div className="space-y-4">
-        <span className="inline-flex rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
+        <span className="inline-flex rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] ">
           Espace agence
         </span>
 
@@ -25,10 +24,10 @@ export default function WelcomeCard({ firstName }: WelcomeCardProps) {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <Button variant="primary">Ajouter une annonce</Button>
+      {/* <div className="flex flex-wrap items-center gap-3">
+        <Button>Ajouter une annonce</Button>
         <Button variant="outline">Voir les visites</Button>
-      </div>
+      </div> */}
     </Card>
   );
 }

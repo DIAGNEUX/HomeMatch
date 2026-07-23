@@ -27,7 +27,7 @@ export default function DashboardListingCard({
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-lg font-semibold text-primary">{title}</p>
-          <p className="text-sm text-muted">Suivi des dernières annonces et demandes d'agence.</p>
+          <p className="text-sm text-muted">Suivi des dernières annonces et demandes d&apos;agence.</p>
         </div>
         <Link
           href="/agency/properties"

@@ -1,3 +1,5 @@
+import PropertiesTable from "@/components/agency/properties/properties-table";
+
 export default function PropertiesPage() {
-  return <h1>Mes annonces</h1>;
+  return <PropertiesTable />;
 }

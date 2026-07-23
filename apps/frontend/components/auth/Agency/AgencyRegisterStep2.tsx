@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import InputField from "@/components/ui/InputField";
+import { Button } from "@/components/ui/button";
 import { agencyRegisterSchema } from "@/validation/agency-register.schema";
 import { AgencyRegisterFormData } from "@/types/auth";
 
@@ -87,21 +88,22 @@ export default function AgencyForm({
       />
 
       <div className="flex gap-4 pt-2">
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={onBack}
-          className="flex-1 rounded-md border border-gray-300 py-2 hover:bg-gray-100"
+          className="h-12 flex-1 cursor-pointer rounded-2xl border-gray-300 text-primary hover:bg-gray-50 hover:text-primary"
         >
           Retour
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="submit"
           disabled={isSubmitting}
-          className="flex-1 rounded-md bg-black py-2 text-white hover:bg-gray-800 disabled:opacity-50"
+          className="h-12 flex-1 cursor-pointer rounded-2xl bg-primary px-4 font-semibold text-white hover:bg-primary-800"
         >
           Créer mon agence
-        </button>
+        </Button>
       </div>
     </form>
   );

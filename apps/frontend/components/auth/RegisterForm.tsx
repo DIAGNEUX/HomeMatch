@@ -1,11 +1,13 @@
 "use client";
 
+import { isAxiosError } from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import InputField from "@/components/ui/InputField";
+import { Button } from "@/components/ui/button";
 
 import authService from "@/services/auth.service";
 
@@ -31,15 +33,24 @@ export default function RegisterForm() {
     try {
       setApiError("");
 
-      const { confirmPassword, ...registerData } = data;
+      const registerData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+        phone: data.phone,
+      };
 
       await authService.register(registerData);
 
       router.push("/login");
-    } catch (error: any) {
+    } catch (error) {
+      const message = isAxiosError(error)
+        ? error.response?.data?.message
+        : undefined;
+
       setApiError(
-        error.response?.data?.message ??
-          "Une erreur est survenue."
+        message ?? "Une erreur est survenue."
       );
     }
   };
@@ -97,15 +108,15 @@ export default function RegisterForm() {
           error={errors.confirmPassword?.message}
         />
 
-        <button
+        <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400"
+          className="h-12 w-full cursor-pointer rounded-2xl bg-primary px-4 font-semibold text-white hover:bg-primary-800"
         >
           {isSubmitting
             ? "Création du compte..."
             : "Créer mon compte"}
-        </button>
+        </Button>
       </form>
     </div>
   );

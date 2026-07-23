@@ -28,7 +28,7 @@ export default function InputField({
         ${
           error
             ? "border-red-500"
-            : "border-gray-300 focus:border-blue-500"
+            : "border-gray-300 focus:border-primary"
         }`}
       />
 

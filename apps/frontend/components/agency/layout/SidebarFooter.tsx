@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function SidebarFooter() {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
 
   const router = useRouter();
 

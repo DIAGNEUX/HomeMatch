@@ -42,15 +42,14 @@ export default function DashboardPage() {
         description="Bienvenue sur votre espace agence HomeMatch."
       />
 
-      <div className="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
-        <div className="space-y-6">
+      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(320px,1fr)]">
+        <div className="min-w-0 space-y-6">
           <WelcomeCard firstName={user.firstName} />
+          <DashboardListingCard title="Dernières annonces" items={listingItems} />
         </div>
 
         <QuickActions />
       </div>
-
-      <DashboardListingCard title="Dernières annonces" items={listingItems} />
     </div>
   );
 }

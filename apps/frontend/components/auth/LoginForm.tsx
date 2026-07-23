@@ -1,5 +1,7 @@
 "use client";
 
+import { isAxiosError } from "axios";
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -9,8 +11,19 @@ import { loginSchema, LoginFormData } from "@/validation/login.schema";
 import authService from "@/services/auth.service";
 import { useAuth } from "@/hooks/useAuth";
 import InputField from "@/components/ui/InputField";
+import { Button } from "@/components/ui/button";
 
-export default function LoginForm() {
+interface LoginFormProps {
+  redirectTo?: string;
+  registerHref?: string;
+  registerLabel?: string;
+}
+
+export default function LoginForm({
+  redirectTo = "/",
+  registerHref = "/register",
+  registerLabel = "Pas encore de compte ? S'inscrire",
+}: LoginFormProps) {
   const router = useRouter();
   const { login } = useAuth();
 
@@ -32,11 +45,14 @@ export default function LoginForm() {
 
       login(response.data.access_token, response.data.user);
 
-      router.push("/");
-    } catch (error: any) {
+      router.push(redirectTo);
+    } catch (error) {
+      const message = isAxiosError(error)
+        ? error.response?.data?.message
+        : undefined;
+
       setApiError(
-        error.response?.data?.message ??
-          "Adresse email ou mot de passe incorrect."
+        message ?? "Adresse email ou mot de passe incorrect."
       );
     }
   };
@@ -74,21 +90,21 @@ export default function LoginForm() {
         />
 
         <div className="text-right">
-          <a
-            href="/register"
-            className="text-sm font-semibold text-blue-600 hover:underline"
+          <Link
+            href={registerHref}
+            className="text-sm font-semibold text-primary hover:underline"
           >
-            Pas encore de compte ? S'inscrire
-          </a>
+            {registerLabel}
+          </Link>
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400"
+          className="h-12 w-full cursor-pointer rounded-2xl bg-primary px-4 font-semibold text-white hover:bg-primary-800"
         >
           {isSubmitting ? "Connexion..." : "Se connecter"}
-        </button>
+        </Button>
       </form>
     </div>
   );
