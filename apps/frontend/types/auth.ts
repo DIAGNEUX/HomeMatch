@@ -28,10 +28,22 @@ export interface RegisterDto {
   phone?: string;
 }
 
-export type RegisterFormData = RegisterDto & {
+export type AgencyRegisterFormData = RegisterAgencyDto & {
   confirmPassword: string;
-};
 
+  // Informations agence
+  name: string;
+  description?: string;
+  siret: string;
+  website?: string;
+  address: string;
+  city: string;
+  postalCode: string;
+};
+export interface RegisterAgencyResponse {
+  access_token: string;
+  user: User;
+}
 export type RegisterResponse = User;
 
 export interface RegisterAgencyDto {

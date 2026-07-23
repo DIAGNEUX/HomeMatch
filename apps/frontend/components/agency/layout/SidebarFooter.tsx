@@ -17,16 +17,7 @@ export default function SidebarFooter() {
   };
 
   return (
-    <div className="border-t p-4">
-      <div className="mb-4">
-        <p className="font-semibold">
-          {user?.firstName} {user?.lastName}
-        </p>
-
-        <p className="text-sm text-gray-500">
-          Agence
-        </p>
-      </div>
+    <div className="border-t border-gray-200 p-4">
 
       <button
         onClick={handleLogout}

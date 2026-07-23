@@ -80,12 +80,6 @@ export default function RegisterForm() {
           error={errors.email?.message}
         />
 
-        <InputField
-          label="Téléphone"
-          placeholder="06 00 00 00 00"
-          registration={register("phone")}
-          error={errors.phone?.message}
-        />
 
         <InputField
           label="Mot de passe"

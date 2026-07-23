@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -29,7 +29,7 @@ export default function SidebarItem({
         text-sm font-medium transition-all duration-200
         ${
           isActive
-            ? "bg-blue-600 text-white shadow-sm"
+            ? "bg-primary text-white shadow-sm"
             : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
         }
       `}

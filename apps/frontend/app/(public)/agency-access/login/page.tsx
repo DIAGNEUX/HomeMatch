@@ -1,4 +1,4 @@
-import AgencyLoginForm from "@/components/auth/AgencyLoginForm";
+import AgencyLoginForm from "@/components/auth/Agency/AgencyRegisterForm";
 
 export default function AgencyLoginPage() {
   return <AgencyLoginForm />;

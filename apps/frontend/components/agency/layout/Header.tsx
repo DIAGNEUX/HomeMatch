@@ -10,15 +10,11 @@ export default function Header() {
   const initials = `${user?.firstName?.charAt(0) ?? ""}${user?.lastName?.charAt(0) ?? ""}`;
 
   return (
-    <header className="flex h-16 items-center justify-between border-b bg-white px-8">
+    <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-8">
       <div>
-        <h1 className="text-xl font-semibold">
-          Bonjour {user?.firstName} 👋
-        </h1>
+      
 
-        <p className="text-sm text-gray-500">
-          Bienvenue sur votre espace agence
-        </p>
+       
       </div>
 
       <div className="flex items-center gap-5">

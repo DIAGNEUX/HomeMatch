@@ -1,10 +1,10 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 export default function SidebarLogo() {
   return (
-    <div className="border-b px-6 py-5">
+    <div className="border-b border-gray-200 px-6 py-5">
       <Link href="/" className="block">
-        <h1 className="text-2xl font-bold text-blue-600">
+        <h1 className="text-2xl font-bold text-primary">
           HomeMatch
         </h1>
 

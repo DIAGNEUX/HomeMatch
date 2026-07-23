@@ -14,11 +14,8 @@ export const registerSchema = z
       .string()
       .email("Adresse email invalide"),
 
-    phone: z
-      .string()
-      .optional(),
+    phone: z.string().optional(),
 
-      
     password: z
       .string()
       .min(8, "Le mot de passe doit contenir au moins 8 caractères"),

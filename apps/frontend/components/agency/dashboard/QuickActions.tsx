@@ -1,36 +1,50 @@
-import Link from "next/link";
-import { Plus, User } from "lucide-react";
+﻿import Link from "next/link";
+import { Plus, User, CalendarDays, MessageCircle } from "lucide-react";
+import Card from "@/components/ui/Card";
 
 export default function QuickActions() {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+    <Card className="space-y-6 border-accent/20 shadow-[0_18px_45px_-20px_rgba(11,22,44,0.25)]">
       <div>
-        <h2 className="text-lg font-semibold text-gray-900">
-          Actions rapides
-        </h2>
-
-        <p className="mt-1 text-sm text-gray-500">
-          Accédez rapidement aux actions les plus fréquentes de votre agence.
+        <h2 className="text-lg font-semibold text-primary">Actions rapides</h2>
+        <p className="mt-1 text-sm text-muted">
+          Accédez aux actions les plus importantes pour votre agence.
         </p>
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-4">
+      <div className="space-y-3">
         <Link
           href="/agency/properties/create"
-          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-white transition hover:bg-primary-800"
         >
           <Plus size={18} />
           Ajouter une annonce
         </Link>
 
         <Link
+          href="/agency/visites"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-surface px-4 py-3 text-sm font-semibold text-primary transition hover:bg-gray-50"
+        >
+          <CalendarDays size={18} />
+          Voir les visites
+        </Link>
+
+        <Link
+          href="/agency/messages"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-surface px-4 py-3 text-sm font-semibold text-primary transition hover:bg-gray-50"
+        >
+          <MessageCircle size={18} />
+          Messages récents
+        </Link>
+
+        <Link
           href="/agency/profile"
-          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-surface px-4 py-3 text-sm font-semibold text-primary transition hover:bg-gray-50"
         >
           <User size={18} />
           Modifier mon profil
         </Link>
       </div>
-    </div>
+    </Card>
   );
 }
