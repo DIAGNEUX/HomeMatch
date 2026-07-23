@@ -57,4 +57,61 @@ model Agency {
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  annonces Annonce[]
+}
+
+
+enum TypeAnnonce {
+  VENTE
+  LOCATION
+}
+
+enum TypeBien {
+  APPARTEMENT
+  MAISON
+  STUDIO
+  TERRAIN
+  LOCAL_COMMERCIAL
+  AUTRE
+}
+
+enum StatutAnnonce {
+  BROUILLON
+  PUBLIEE
+}
+
+model Annonce {
+  id                String       @id @default(cuid())
+
+  titre             String       @db.VarChar(255)
+  description       String
+
+  typeAnnonce       TypeAnnonce
+  typeBien          TypeBien
+
+  prix              Float
+  surface           Float
+
+  nombrePieces      Int
+  nombreSallesBains Int
+  nombreChambres    Int
+
+  etage             Int?
+  anneeConstruction Int?
+
+  adresse           String       @db.VarChar(255)
+  ville             String       @db.VarChar(100)
+
+  agencyId          String
+  agency            Agency       @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  @@index([agencyId])
+  @@index([ville])
+  @@index([typeAnnonce, typeBien])
+  @@map("annonces")
+  statut StatutAnnonce @default(BROUILLON)
 }
