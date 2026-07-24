@@ -1,0 +1,122 @@
+[
+  {
+    "email": "thomas.martin@homematch.fr",
+    "name": "Immo Premium",
+    "description": "Agence spécialisée dans la vente et la location de biens résidentiels haut de gamme.",
+    "siret": "12345678901234",
+    "phone": "0140203040",
+    "website": "https://www.immopremium.fr",
+    "address": "18 Rue de Rivoli",
+    "city": "Paris",
+    "postalCode": "75004",
+    "logo": "/images/agencies/immo-premium.png"
+  },
+  {
+    "email": "julie.bernard@homematch.fr",
+    "name": "Urban Living",
+    "description": "Experts de l'immobilier urbain et des appartements modernes.",
+    "siret": "23456789012345",
+    "phone": "0472001122",
+    "website": "https://www.urbanliving.fr",
+    "address": "42 Rue de la République",
+    "city": "Lyon",
+    "postalCode": "69002",
+    "logo": "/images/agencies/urban-living.png"
+  },
+  {
+    "email": "lucas.dubois@homematch.fr",
+    "name": "Horizon Immobilier",
+    "description": "Votre partenaire pour tous vos projets immobiliers depuis plus de 15 ans.",
+    "siret": "34567890123456",
+    "phone": "0491002233",
+    "website": "https://www.horizon-immo.fr",
+    "address": "10 Boulevard Longchamp",
+    "city": "Marseille",
+    "postalCode": "13001",
+    "logo": "/images/agencies/horizon-immobilier.png"
+  },
+  {
+    "email": "emma.laurent@homematch.fr",
+    "name": "Prestige Home",
+    "description": "Spécialiste des biens d'exception et des résidences de prestige.",
+    "siret": "45678901234567",
+    "phone": "0556003344",
+    "website": "https://www.prestigehome.fr",
+    "address": "8 Cours de l'Intendance",
+    "city": "Bordeaux",
+    "postalCode": "33000",
+    "logo": "/images/agencies/prestige-home.png"
+  },
+  {
+    "email": "nicolas.moreau@homematch.fr",
+    "name": "Nova Immo",
+    "description": "Une équipe dynamique pour vous accompagner dans tous vos projets immobiliers.",
+    "siret": "56789012345678",
+    "phone": "0320004455",
+    "website": "https://www.novaimmo.fr",
+    "address": "15 Rue Nationale",
+    "city": "Lille",
+    "postalCode": "59800",
+    "logo": "/images/agencies/nova-immo.png"
+  },
+  {
+    "email": "camille.robert@homematch.fr",
+    "name": "Atlantique Habitat",
+    "description": "Des logements adaptés à chaque style de vie dans l'ouest de la France.",
+    "siret": "67890123456789",
+    "phone": "0240005566",
+    "website": "https://www.atlantiquehabitat.fr",
+    "address": "27 Rue Crébillon",
+    "city": "Nantes",
+    "postalCode": "44000",
+    "logo": "/images/agencies/atlantique-habitat.png"
+  },
+  {
+    "email": "antoine.garnier@homematch.fr",
+    "name": "Azur Immobilier",
+    "description": "Spécialiste des biens en bord de mer et des résidences secondaires.",
+    "siret": "78901234567890",
+    "phone": "0493006677",
+    "website": "https://www.azur-immobilier.fr",
+    "address": "21 Avenue Jean Médecin",
+    "city": "Nice",
+    "postalCode": "06000",
+    "logo": "/images/agencies/azur-immobilier.png"
+  },
+  {
+    "email": "lea.fontaine@homematch.fr",
+    "name": "Cap Habitat",
+    "description": "Accompagnement personnalisé pour l'achat, la vente et la location de biens immobiliers.",
+    "siret": "89012345678901",
+    "phone": "0388007788",
+    "website": "https://www.caphabitat.fr",
+    "address": "11 Place Kléber",
+    "city": "Strasbourg",
+    "postalCode": "67000",
+    "logo": "/images/agencies/cap-habitat.png"
+  },
+  {
+    "email": "maxime.chevalier@homematch.fr",
+    "name": "Grand Est Immo",
+    "description": "Une agence proche de ses clients pour tous leurs projets immobiliers.",
+    "siret": "90123456789012",
+    "phone": "0383008899",
+    "website": "https://www.grandestimmo.fr",
+    "address": "6 Rue Saint-Jean",
+    "city": "Nancy",
+    "postalCode": "54000",
+    "logo": "/images/agencies/grand-est-immo.png"
+  },
+  {
+    "email": "claire.petit@homematch.fr",
+    "name": "Océan Immobilier",
+    "description": "Votre partenaire immobilier sur la côte Atlantique.",
+    "siret": "91234567890123",
+    "phone": "0546009900",
+    "website": "https://www.ocean-immobilier.fr",
+    "address": "3 Quai Valin",
+    "city": "La Rochelle",
+    "postalCode": "17000",
+    "logo": "/images/agencies/ocean-immobilier.png"
+  }
+]

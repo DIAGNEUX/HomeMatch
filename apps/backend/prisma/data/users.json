@@ -1,0 +1,82 @@
+[
+  {
+    "firstName": "Thomas",
+    "lastName": "Martin",
+    "email": "thomas.martin@homematch.fr",
+    "password": "Password123!",
+    "phone": "0612345678",
+    "role": "AGENCY"
+  },
+  {
+    "firstName": "Julie",
+    "lastName": "Bernard",
+    "email": "julie.bernard@homematch.fr",
+    "password": "Password123!",
+    "phone": "0623456789",
+    "role": "AGENCY"
+  },
+  {
+    "firstName": "Lucas",
+    "lastName": "Dubois",
+    "email": "lucas.dubois@homematch.fr",
+    "password": "Password123!",
+    "phone": "0634567890",
+    "role": "AGENCY"
+  },
+  {
+    "firstName": "Emma",
+    "lastName": "Laurent",
+    "email": "emma.laurent@homematch.fr",
+    "password": "Password123!",
+    "phone": "0645678901",
+    "role": "AGENCY"
+  },
+  {
+    "firstName": "Nicolas",
+    "lastName": "Moreau",
+    "email": "nicolas.moreau@homematch.fr",
+    "password": "Password123!",
+    "phone": "0656789012",
+    "role": "AGENCY"
+  },
+  {
+    "firstName": "Camille",
+    "lastName": "Robert",
+    "email": "camille.robert@homematch.fr",
+    "password": "Password123!",
+    "phone": "0667890123",
+    "role": "AGENCY"
+  },
+  {
+    "firstName": "Antoine",
+    "lastName": "Garnier",
+    "email": "antoine.garnier@homematch.fr",
+    "password": "Password123!",
+    "phone": "0678901234",
+    "role": "AGENCY"
+  },
+  {
+    "firstName": "Léa",
+    "lastName": "Fontaine",
+    "email": "lea.fontaine@homematch.fr",
+    "password": "Password123!",
+    "phone": "0689012345",
+    "role": "AGENCY"
+  },
+  {
+    "firstName": "Maxime",
+    "lastName": "Chevalier",
+    "email": "maxime.chevalier@homematch.fr",
+    "password": "Password123!",
+    "phone": "0690123456",
+    "role": "AGENCY"
+  },
+  {
+    "firstName": "Claire",
+    "lastName": "Petit",
+    "email": "claire.petit@homematch.fr",
+    "password": "Password123!",
+    "phone": "0601234567",
+    "role": "AGENCY"
+  }
+]
