@@ -23,6 +23,7 @@ export default function HomeSearchCard() {
   const [activeTab, setActiveTab] = useState("assistant");
   const [ville, setVille] = useState("");
   const [typeBien, setTypeBien] = useState("");
+  const [assistantMessage, setAssistantMessage] = useState("");
 
   const handleClassicSearch = () => {
     const params = new URLSearchParams();
@@ -45,6 +46,8 @@ export default function HomeSearchCard() {
           <textarea
             id="home-search"
             rows={3}
+            value={assistantMessage}
+            onChange={(e) => setAssistantMessage(e.target.value)}
             placeholder={homeHeroContent.searchExample}
             className="mt-5 min-h-20 w-full resize-none border-0 bg-transparent text-sm text-[#0B162C] outline-none placeholder:text-[#9CA3AD]"
           />
@@ -52,6 +55,15 @@ export default function HomeSearchCard() {
           <div className="flex items-center justify-end border-t border-gray-100 pt-3">
             <Button
               type="button"
+              onClick={() =>
+                assistantMessage.trim() &&
+                router.push(
+                  `/assistant?message=${encodeURIComponent(
+                    assistantMessage,
+                  )}`,
+                )
+              }
+              disabled={!assistantMessage.trim()}
               className="h-9 cursor-pointer rounded-lg bg-[#5FC2BA] px-4 text-sm font-medium text-[#0B162C] hover:bg-[#4BB4AC]"
             >
               {homeHeroContent.searchButtonLabel}

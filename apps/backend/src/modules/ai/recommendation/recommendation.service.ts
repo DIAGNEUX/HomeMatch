@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { TypeAnnonce } from '@prisma/client';
 
 import { AnnouncementsService } from '@/modules/announcements/announcements.service';
 import { ConversationContext } from '../conversation/conversation.context';
@@ -17,9 +16,9 @@ export class RecommendationService {
 
   async findAlternatives(context: ConversationContext) {
     const annonces =
-      await this.announcementsService.findRecommendationCandidates({
-        city: context.city,
-        typeAnnonce: context.typeAnnonce as TypeAnnonce,
+      await this.announcementsService.searchAnnonces({
+        ville: context.city,
+        typeAnnonce: context.typeAnnonce as 'VENTE' | 'LOCATION' | undefined,
       });
 
     const ranked = annonces

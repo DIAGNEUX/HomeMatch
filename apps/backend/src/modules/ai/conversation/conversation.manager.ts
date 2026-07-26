@@ -5,6 +5,7 @@ import { ConversationStore } from './conversation.store';
 import { ConversationPromptBuilder } from '../prompts/conversation-prompt.builder';
 import { RecommendationService } from '../recommendation/recommendation.service';
 import { ConversationContext } from './conversation.context';
+import { propertyTypeMapper } from '../mappers/property-type.mapper';
 
 const REQUIRED_CRITERIA = [
   'city',
@@ -19,6 +20,21 @@ const NEXT_QUESTIONS: Record<(typeof REQUIRED_CRITERIA)[number], string> = {
   typeAnnonce: 'Souhaitez-vous acheter ou louer ce bien ?',
   maxPrice: 'Quel est votre budget maximum ?',
 };
+
+function buildAnnonceFilters(context: ConversationContext) {
+  return {
+    ville: context.city,
+    typeAnnonce: context.typeAnnonce as 'VENTE' | 'LOCATION' | undefined,
+    typeBien: context.propertyType
+      ? propertyTypeMapper[context.propertyType]
+      : undefined,
+    prixMin: context.minPrice,
+    prixMax: context.maxPrice,
+    surfaceMin: context.surface,
+    nombrePiecesMin: context.rooms,
+    nombreChambresMin: context.bedrooms,
+  };
+}
 
 function extractExplicitCriteria(message: string): Partial<ConversationContext> {
   const normalizedMessage = message
@@ -111,7 +127,9 @@ async processMessage(
   }
 
   const annonces =
-  await this.announcementsService.findByCriteria(context);
+  await this.announcementsService.searchAnnonces(
+    buildAnnonceFilters(context),
+  );
 
   if (annonces.length > 0) {
     return {

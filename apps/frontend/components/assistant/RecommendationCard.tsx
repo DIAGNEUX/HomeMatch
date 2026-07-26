@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getImageUrl } from "@/lib/image-url";
 import { Bath, BedDouble, Home, MapPin, Ruler } from "lucide-react";
 
 import { Recommendation } from "@/types/assistant";
@@ -28,19 +29,30 @@ export default function RecommendationCard({
   recommendation,
 }: RecommendationCardProps) {
   const { annonce, highlights, differences, score } = recommendation;
-  const imageUrl = annonce.images?.[0]?.url;
+  const rawImage = annonce.images?.[0]?.url;
+  const imageUrl = rawImage ? getImageUrl(rawImage) : "";
+  const baseURL = process.env.NEXT_PUBLIC_API_URL ?? "";
+  const isAbsolute = /^https?:\/\//i.test(imageUrl);
+  const isLocalBackend = isAbsolute && (
+    imageUrl.includes('localhost') || imageUrl.includes('127.0.0.1') || baseURL && imageUrl.startsWith(baseURL)
+  );
 
   return (
     <article className="overflow-hidden rounded-lg border border-gray-100 bg-white shadow-[0_18px_40px_-30px_rgba(11,22,44,0.7)]">
       <div className="relative h-36 bg-[#F3F6F8]">
         {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={annonce.titre}
-            fill
-            sizes="(min-width: 1024px) 260px, 90vw"
-            className="object-cover"
-          />
+          isLocalBackend ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={imageUrl} alt={annonce.titre} className="object-cover w-full h-full" />
+          ) : (
+            <Image
+              src={imageUrl}
+              alt={annonce.titre}
+              fill
+              sizes="(min-width: 1024px) 260px, 90vw"
+              className="object-cover"
+            />
+          )
         ) : (
           <div className="flex h-full items-center justify-center text-[#5B6F86]">
             <Home size={32} />

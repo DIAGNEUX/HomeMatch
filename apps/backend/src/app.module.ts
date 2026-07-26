@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.service';
 import { PrismaModule } from './database/prisma.module';
+import { AiModule } from './modules/ai/ai.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AgenciesModule } from './modules/agencies/agencies.module';
@@ -15,6 +16,7 @@ import { AnnouncementsModule } from './modules/announcements/announcements.modul
       envFilePath: '.env',
     }),
     PrismaModule,
+    AiModule,
     UsersModule,
     AuthModule,
     AgenciesModule,
