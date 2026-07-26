@@ -33,9 +33,15 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem("access_token");
+        localStorage.removeItem("access_token");
 
-      window.location.href = "/login";
+        // If we're on the admin area, go to admin login, otherwise public login
+        const path = window.location.pathname || "";
+        if (path.startsWith("/homematch")) {
+          window.location.href = "/homematch/login";
+        } else {
+          window.location.href = "/login";
+        }
     }
 
     return Promise.reject(error);

@@ -8,6 +8,7 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AgenciesModule } from './modules/agencies/agencies.module';
 import { AnnouncementsModule } from './modules/announcements/announcements.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AnnouncementsModule } from './modules/announcements/announcements.modul
     AiModule,
     UsersModule,
     AuthModule,
+    AdminModule,
     AgenciesModule,
     AnnouncementsModule,
   ],

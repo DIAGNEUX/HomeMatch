@@ -34,8 +34,7 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
   @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard , RolesGuard) 
-  @Roles(Role.USER, Role.AGENCY)
+  @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Request() req: any) {
     return req.user;
