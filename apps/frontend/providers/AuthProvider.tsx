@@ -2,6 +2,7 @@
 
 import { createContext, ReactNode, useEffect, useState } from "react";
 import authService from "@/services/auth.service";
+import adminAuthService from "@/services/admin-auth.service";
 import { AuthContextType, User } from "@/types/auth";
 
 interface AuthProviderProps {
@@ -50,11 +51,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const response = await authService.me();
 
         setUser(response.data);
-      } catch (error) {
-        console.error("Impossible de restaurer la session :", error);
+      } catch (error: any) {
+        // If /auth/me fails (403/401), try /admin/me as a fallback for admin tokens
+        try {
+          const resp2 = await adminAuthService.me();
+          setUser(resp2.data);
+        } catch (e) {
+          console.error("Impossible de restaurer la session :", error);
 
-        localStorage.removeItem("access_token");
-        setUser(null);
+          localStorage.removeItem("access_token");
+          setUser(null);
+        }
       } finally {
         setLoading(false);
       }
@@ -66,9 +73,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   /**
    * On attend que la session soit restaurée
    */
-  if (loading) {
-    return null;
-  }
+  // Always provide the context so pages can react to the `loading` state
+  // (avoids redirecting before restoreSession completes).
 
   return (
     <AuthContext.Provider
