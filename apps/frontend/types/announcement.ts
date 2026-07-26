@@ -10,6 +10,13 @@ export type TypeBien =
 
 export type StatutAnnonce = "BROUILLON" | "PUBLIEE";
 
+export type AnnonceImage = {
+  id: string;
+  url: string;
+  annonceId: string;
+  createdAt: string;
+};
+
 export type Annonce = {
   id: string;
   titre: string;
@@ -27,6 +34,7 @@ export type Annonce = {
   ville: string;
   statut: StatutAnnonce;
   agencyId: string;
+  images: AnnonceImage[];
   createdAt: string;
   updatedAt: string;
 };
@@ -48,3 +56,27 @@ export type CreateAnnonceDto = {
 };
 
 export type UpdateAnnonceDto = Partial<CreateAnnonceDto>;
+
+export type SearchAnnonceParams = {
+  q?: string;
+  ville?: string;
+  typeAnnonce?: TypeAnnonce;
+  typeBien?: TypeBien;
+  prixMin?: number;
+  prixMax?: number;
+  surfaceMin?: number;
+  nombrePiecesMin?: number;
+  nombreChambresMin?: number;
+  sortBy?: "prix" | "surface" | "createdAt";
+  order?: "asc" | "desc";
+  page?: number;
+  limit?: number;
+};
+
+export type SearchAnnoncesResponse = {
+  success: boolean;
+  data: Annonce[];
+  total: number;
+  page: number;
+  limit: number;
+};
