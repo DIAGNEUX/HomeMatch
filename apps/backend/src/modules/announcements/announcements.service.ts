@@ -1,13 +1,17 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { AnnouncementsRepository } from './repositories/announcements.repository';
+import {
+  AnnouncementsRepository,
+  AnnonceSearchFilters,
+} from './repositories/announcements.repository';
 import { CreateAnnonceDto } from './dto/create-annonce.dto';
 import { UpdateAnnonceDto } from './dto/update-annonce.dto';
+import { SearchAnnonceDto } from './dto/search-annonce.dto';
 import { Annonce } from '@prisma/client';
-import { BadRequestException } from '@nestjs/common';
 
 @Injectable()
 export class AnnouncementsService {
@@ -53,14 +57,6 @@ export class AnnouncementsService {
     return this.announcementsRepository.delete(id);
   }
 
-  async findAllAnnonces(): Promise<Annonce[]> {
-    return this.announcementsRepository.findAll();
-  }
-  
-  async findOneAnnonce(id: string): Promise<Annonce> {
-    return this.getAnnonceOrThrow(id);
-  }
-
   private readonly requiredFields: (keyof Annonce)[] = [
     'titre',
     'description',
@@ -74,25 +70,66 @@ export class AnnouncementsService {
     'adresse',
     'ville',
   ];
-  
+
   private checkCanPublish(annonce: Annonce): void {
     const missingFields = this.requiredFields.filter(
       (field) => annonce[field] === null || annonce[field] === undefined,
     );
-  
+
     if (missingFields.length > 0) {
       throw new BadRequestException(
         `Impossible de publier : champs manquants (${missingFields.join(', ')}).`,
       );
     }
   }
-  
+
   async publishAnnonce(id: string, agencyId: string): Promise<Annonce> {
     const annonce = await this.getAnnonceOrThrow(id);
     this.checkOwnership(annonce, agencyId);
     this.checkCanPublish(annonce);
-  
+
     return this.announcementsRepository.updateStatut(id, 'PUBLIEE');
   }
 
+  async findAllAnnonces(): Promise<Annonce[]> {
+    return this.announcementsRepository.findAll();
+  }
+
+  async findOneAnnonce(id: string): Promise<Annonce> {
+    return this.getAnnonceOrThrow(id);
+  }
+
+  async findByAgency(agencyId: string): Promise<Annonce[]> {
+    return this.announcementsRepository.findByAgency(agencyId);
+  }
+
+  async searchPublicAnnonces(
+    filters: SearchAnnonceDto,
+  ): Promise<{ data: Annonce[]; total: number; page: number; limit: number }> {
+    const { data, total } = await this.announcementsRepository.searchPublic(
+      filters,
+    );
+
+    return {
+      data,
+      total,
+      page: filters.page ?? 1,
+      limit: filters.limit ?? 12,
+    };
+  }
+
+  async searchAnnonces(filters: AnnonceSearchFilters): Promise<Annonce[]> {
+    return this.announcementsRepository.search(filters);
+  }
+
+  async findPublicAnnonce(id: string): Promise<Annonce> {
+    const annonce = await this.getAnnonceOrThrow(id);
+  
+    if (annonce.statut !== 'PUBLIEE') {
+      throw new NotFoundException('Annonce introuvable.');
+    }
+  
+    return annonce;
+  }
+  
 }

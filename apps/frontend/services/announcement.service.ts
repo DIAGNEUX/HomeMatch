@@ -3,11 +3,19 @@ import {
   Annonce,
   CreateAnnonceDto,
   UpdateAnnonceDto,
+  SearchAnnonceParams,
+  SearchAnnoncesResponse,
 } from "@/types/announcement";
 
 const announcementService = {
-  findAll() {
-    return api.get<{ success: boolean; data: Annonce[] }>("/announcements");
+  search(params: SearchAnnonceParams) {
+    return api.get<SearchAnnoncesResponse>("/announcements", { params });
+  },
+
+  findMine() {
+    return api.get<{ success: boolean; data: Annonce[] }>(
+      "/announcements/mine"
+    );
   },
 
   findOne(id: string) {

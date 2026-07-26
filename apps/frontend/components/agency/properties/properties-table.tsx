@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MoreHorizontal, Plus, Pencil, Trash2, Send } from "lucide-react";
+import {
+  MoreHorizontal,
+  Plus,
+  Pencil,
+  Trash2,
+  Send,
+  ImageIcon,
+} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,6 +33,7 @@ import type { Annonce, StatutAnnonce } from "@/types/announcement";
 import AnnonceFormDialog from "./AnnonceFormDialog";
 import DeleteAnnonceDialog from "./DeleteAnnonceDialog";
 import PublishAnnonceDialog from "./PublishAnnonceDialog";
+import ManageImagesDialog from "./ManageImagesDialog";
 
 const statusClassName: Record<StatutAnnonce, string> = {
   BROUILLON: "border-slate-200 bg-slate-50 text-slate-700",
@@ -45,12 +53,13 @@ export default function PropertiesTable() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isPublishOpen, setIsPublishOpen] = useState(false);
+  const [isImagesOpen, setIsImagesOpen] = useState(false);
   const [selectedAnnonce, setSelectedAnnonce] = useState<Annonce | null>(null);
 
   const fetchAnnonces = async () => {
     setLoading(true);
     try {
-      const response = await announcementService.findAll();
+      const response = await announcementService.findMine();
       setAnnonces(response.data.data);
       setError(null);
     } catch (err) {
@@ -83,6 +92,11 @@ export default function PropertiesTable() {
   const handlePublish = (annonce: Annonce) => {
     setSelectedAnnonce(annonce);
     setIsPublishOpen(true);
+  };
+
+  const handleManageImages = (annonce: Annonce) => {
+    setSelectedAnnonce(annonce);
+    setIsImagesOpen(true);
   };
 
   return (
@@ -189,6 +203,12 @@ export default function PropertiesTable() {
                             Publier
                           </DropdownMenuItem>
                         )}
+                        <DropdownMenuItem
+                          onClick={() => handleManageImages(annonce)}
+                        >
+                          <ImageIcon size={14} className="mr-2" />
+                          Gérer les images
+                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleEdit(annonce)}>
                           <Pencil size={14} className="mr-2" />
                           Modifier
@@ -226,6 +246,13 @@ export default function PropertiesTable() {
       <PublishAnnonceDialog
         open={isPublishOpen}
         onOpenChange={setIsPublishOpen}
+        annonce={selectedAnnonce}
+        onSuccess={fetchAnnonces}
+      />
+
+      <ManageImagesDialog
+        open={isImagesOpen}
+        onOpenChange={setIsImagesOpen}
         annonce={selectedAnnonce}
         onSuccess={fetchAnnonces}
       />

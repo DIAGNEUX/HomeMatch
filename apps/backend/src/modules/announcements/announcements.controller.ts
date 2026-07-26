@@ -2,22 +2,24 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { AnnouncementsService } from './announcements.service';
 import { CreateAnnonceDto } from './dto/create-annonce.dto';
 import { UpdateAnnonceDto } from './dto/update-annonce.dto';
+import { SearchAnnonceDto } from './dto/search-annonce.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 import { AgenciesService } from '../agencies/agencies.service';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { Get } from '@nestjs/common';
 
 @Controller('announcements')
 export class AnnouncementsController {
@@ -31,10 +33,6 @@ export class AnnouncementsController {
   @ApiBearerAuth('access-token')
   @Roles(Role.AGENCY)
   async create(@Body() dto: CreateAnnonceDto, @Req() req) {
-    console.log(req);
-
-    console.log(req.user);
-    console.log(req.user.sub);
     const agency = await this.agenciesService.findByUserId(req.user.id);
     const annonce = await this.announcementsService.createAnnonce(dto, agency.id);
 
@@ -45,17 +43,34 @@ export class AnnouncementsController {
   }
 
   @Get()
-async findAll() {
-  const annonces = await this.announcementsService.findAllAnnonces();
-  return {
-    success: true,
-    data: annonces,
-  };
-}
+  async findAll(@Query() searchDto: SearchAnnonceDto) {
+    const result = await this.announcementsService.searchPublicAnnonces(
+      searchDto,
+    );
 
-@Get(':id')
+    return {
+      success: true,
+      ...result,
+    };
+  }
+
+  @Get('mine')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth('access-token')
+  @Roles(Role.AGENCY)
+  async findMine(@Req() req) {
+    const agency = await this.agenciesService.findByUserId(req.user.id);
+    const annonces = await this.announcementsService.findByAgency(agency.id);
+
+    return {
+      success: true,
+      data: annonces,
+    };
+  }
+
+  @Get(':id')
 async findOne(@Param('id') id: string) {
-  const annonce = await this.announcementsService.findOneAnnonce(id);
+  const annonce = await this.announcementsService.findPublicAnnonce(id);
   return {
     success: true,
     data: annonce,
@@ -99,17 +114,19 @@ async findOne(@Param('id') id: string) {
   }
 
   @Patch(':id/publish')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@ApiBearerAuth('access-token')
-@Roles(Role.AGENCY)
-async publish(@Param('id') id: string, @Req() req) {
-  const agency = await this.agenciesService.findByUserId(req.user.id);
-  const annonce = await this.announcementsService.publishAnnonce(id, agency.id);
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth('access-token')
+  @Roles(Role.AGENCY)
+  async publish(@Param('id') id: string, @Req() req) {
+    const agency = await this.agenciesService.findByUserId(req.user.id);
+    const annonce = await this.announcementsService.publishAnnonce(
+      id,
+      agency.id,
+    );
 
-  return {
-    success: true,
-    data: annonce,
-  };
-}
-
+    return {
+      success: true,
+      data: annonce,
+    };
+  }
 }
