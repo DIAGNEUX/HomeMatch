@@ -1,14 +1,16 @@
 import { api } from "@/lib/axios";
 import {
   LoginDto,
+  LoginResponse,
   RegisterDto,
   RegisterAgencyDto,
+  RegisterAgencyResponse,
   User,
 } from "@/types/auth";
 
 const authService = {
   login(data: LoginDto) {
-    return api.post("/auth/login", data);
+    return api.post<LoginResponse>("/auth/login", data);
   },
 
   register(data: RegisterDto) {
@@ -16,11 +18,17 @@ const authService = {
   },
 
   registerAgency(data: RegisterAgencyDto) {
-    return api.post("/auth/register/agency", data);
+    return api.post<RegisterAgencyResponse>("/auth/register/agency", data);
   },
 
-  me() {
-    return api.get<User>("/auth/me");
+  me(options?: { skipAuthRedirect?: boolean }) {
+    return api.get<User>("/auth/me", {
+      skipAuthRedirect: options?.skipAuthRedirect,
+    });
+  },
+
+  logout() {
+    return api.post<{ success: boolean; message: string }>("/auth/logout");
   },
 };
 

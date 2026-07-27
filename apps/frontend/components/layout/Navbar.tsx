@@ -21,30 +21,40 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const publicLinks = [
-  {
-    href: "/",
-    label: "Accueil",
-  },
-  {
-    href: "/#about",
-    label: "À propos",
-  },
-];
-
 export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
   const router = useRouter();
+  const homeHref =
+    user?.role === "AGENCY"
+      ? "/agency"
+      : user?.role === "ADMIN"
+        ? "/homematch/intranet"
+        : "/";
+  const publicLinks = [
+    {
+      href: homeHref,
+      label: "Accueil",
+    },
+    {
+      href: "/#about",
+      label: "À propos",
+    },
+  ];
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     router.push("/");
+    router.refresh();
   };
 
   return (
     <header className="sticky top-0 z-40 border-b border-gray-100 bg-white/95 backdrop-blur">
       <div className="flex h-20 w-full items-center justify-between px-5 sm:px-8">
-        <Link href="/" className="flex shrink-0 items-center" aria-label="Accueil HomeMatch">
+        <Link
+          href={homeHref}
+          className="flex shrink-0 items-center"
+          aria-label="Accueil HomeMatch"
+        >
           <Image
             src="/images/logos/homematch-logo.png"
             alt="HomeMatch"

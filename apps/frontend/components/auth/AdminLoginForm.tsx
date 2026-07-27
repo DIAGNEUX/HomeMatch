@@ -29,8 +29,9 @@ export default function AdminLoginForm() {
     try {
       setApiError("");
       const response = await adminAuthService.login(data);
-      login(response.data.access_token, response.data.user);
+      login(response.data.user);
       router.push("/homematch/intranet");
+      router.refresh();
     } catch (error) {
       const message = isAxiosError(error)
         ? error.response?.data?.message

@@ -11,6 +11,7 @@ export interface User {
   email: string;
   phone?: string;
   role: "USER" | "AGENCY" | "ADMIN";
+  isActive?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -66,7 +67,7 @@ export interface AuthContextType {
   loading: boolean;
   isAuthenticated: boolean;
 
-  login: (token: string, user: User) => void;
-  logout: () => void;
+  login: (user: User) => void;
+  logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }

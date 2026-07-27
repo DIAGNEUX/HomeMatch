@@ -27,7 +27,7 @@ export default function HomeSearchTabs({
             key={tab.id}
             type="button"
             onClick={() => onTabChange(tab.id)}
-            className={`inline-flex h-9 items-center gap-2 rounded-md px-3 text-sm font-semibold transition ${
+            className={`inline-flex h-8 items-center gap-2 rounded-md px-3 text-sm font-semibold transition ${
               isActive
                 ? "border border-gray-200 bg-white text-[#0B162C] shadow-sm"
                 : "text-[#3B556D] hover:bg-gray-50 hover:text-[#0B162C]"

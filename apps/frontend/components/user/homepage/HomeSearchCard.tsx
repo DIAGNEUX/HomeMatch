@@ -34,7 +34,7 @@ export default function HomeSearchCard() {
   };
 
   return (
-    <div className="rounded-xl border border-white/80 bg-white/95 p-4 shadow-[0_24px_70px_-28px_rgba(11,22,44,0.45),0_10px_24px_-18px_rgba(95,194,186,0.65)] ring-1 ring-gray-100/80 backdrop-blur">
+    <div className="rounded-xl border border-white/80 bg-white/95 p-3 shadow-[0_24px_70px_-28px_rgba(11,22,44,0.45),0_10px_24px_-18px_rgba(95,194,186,0.65)] ring-1 ring-gray-100/80 backdrop-blur sm:p-4">
       <HomeSearchTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
       {activeTab === "assistant" && (
@@ -45,14 +45,14 @@ export default function HomeSearchCard() {
 
           <textarea
             id="home-search"
-            rows={3}
+            rows={2}
             value={assistantMessage}
             onChange={(e) => setAssistantMessage(e.target.value)}
             placeholder={homeHeroContent.searchExample}
-            className="mt-5 min-h-20 w-full resize-none border-0 bg-transparent text-sm text-[#0B162C] outline-none placeholder:text-[#9CA3AD]"
+            className="mt-3 h-12 w-full resize-none border-0 bg-transparent text-sm text-[#0B162C] outline-none placeholder:text-[#9CA3AD]"
           />
 
-          <div className="flex items-center justify-end border-t border-gray-100 pt-3">
+          <div className="flex items-center justify-end border-t border-gray-100 pt-2">
             <Button
               type="button"
               onClick={() =>
@@ -64,7 +64,7 @@ export default function HomeSearchCard() {
                 )
               }
               disabled={!assistantMessage.trim()}
-              className="h-9 cursor-pointer rounded-lg bg-[#5FC2BA] px-4 text-sm font-medium text-[#0B162C] hover:bg-[#4BB4AC]"
+              className="h-8 cursor-pointer rounded-lg bg-[#5FC2BA] px-4 text-sm font-medium text-[#0B162C] hover:bg-[#4BB4AC]"
             >
               {homeHeroContent.searchButtonLabel}
             </Button>
@@ -96,11 +96,11 @@ export default function HomeSearchCard() {
             </select>
           </div>
 
-          <div className="flex items-center justify-end border-t border-gray-100 pt-3">
+          <div className="flex items-center justify-end border-t border-gray-100 pt-2">
             <Button
               type="button"
               onClick={handleClassicSearch}
-              className="h-9 cursor-pointer rounded-lg bg-[#5FC2BA] px-4 text-sm font-medium text-[#0B162C] hover:bg-[#4BB4AC]"
+              className="h-8 cursor-pointer rounded-lg bg-[#5FC2BA] px-4 text-sm font-medium text-[#0B162C] hover:bg-[#4BB4AC]"
             >
               Lancer la recherche
             </Button>

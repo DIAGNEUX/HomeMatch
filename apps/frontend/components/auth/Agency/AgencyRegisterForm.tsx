@@ -65,15 +65,13 @@ export default function AgencyRegisterForm() {
         });
 
       // Connexion automatique
-      login(
-        response.data.access_token,
-        response.data.user
-      );
+      login(response.data.user);
 
       // Création de l'agence
       await agencyService.create(agencyData);
 
       router.push("/agency");
+      router.refresh();
     } catch (error) {
       console.error(error);
       alert("Une erreur est survenue.");

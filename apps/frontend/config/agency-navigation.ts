@@ -11,6 +11,7 @@ export const agencyNavigation = [
     label: "Tableau de bord",
     href: "/agency",
     icon: LayoutDashboard,
+    exact: true,
   },
   {
     label: "Mes annonces",

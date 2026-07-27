@@ -1,5 +1,5 @@
 export const homeHeroContent = {
-  title: "Votre futur logement vous attend.",
+  titleLines: ["Votre futur logement", "vous attend."],
   description: [
     "Décrivez votre projet en quelques mots.",
     "Notre IA sélectionne les biens qui correspondent vraiment à vos besoins.",

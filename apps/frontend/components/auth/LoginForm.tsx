@@ -43,9 +43,10 @@ export default function LoginForm({
 
       const response = await authService.login(data);
 
-      login(response.data.access_token, response.data.user);
+      login(response.data.user);
 
       router.push(redirectTo);
+      router.refresh();
     } catch (error) {
       const message = isAxiosError(error)
         ? error.response?.data?.message

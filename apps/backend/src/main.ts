@@ -39,8 +39,15 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, document);
 
+  const allowedOrigins = (
+    process.env.FRONTEND_URL ?? 'http://localhost:3000'
+  )
+    .split(',')
+    .map((origin) => origin.trim().replace(/\/$/, ''))
+    .filter(Boolean);
+
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: allowedOrigins,
     credentials: true,
   });
 

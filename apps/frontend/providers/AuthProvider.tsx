@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, ReactNode, useEffect, useState } from "react";
+
 import authService from "@/services/auth.service";
 import adminAuthService from "@/services/admin-auth.service";
 import { AuthContextType, User } from "@/types/auth";
@@ -19,20 +20,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const isAuthenticated = !!user;
 
-  /**
-   * Connexion
-   */
-  const login = (token: string, user: User) => {
-    localStorage.setItem("access_token", token);
+  const login = (user: User) => {
+    localStorage.removeItem("access_token");
     setUser(user);
   };
 
-  /**
-   * Déconnexion
-   */
-  const logout = () => {
-    localStorage.removeItem("access_token");
-    setUser(null);
+  const logout = async () => {
+    try {
+      await authService.logout();
+    } finally {
+      localStorage.removeItem("access_token");
+      setUser(null);
+    }
   };
 
   const refreshUser = async () => {
@@ -40,28 +39,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(response.data);
   };
 
-  /**
-   * Restaurer la session au démarrage
-   */
   useEffect(() => {
     const restoreSession = async () => {
-      const token = localStorage.getItem("access_token");
-
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
       try {
-        await refreshUser();
-      } catch (error: any) {
-        // If /auth/me fails (403/401), try /admin/me as a fallback for admin tokens
+        const response = await authService.me({ skipAuthRedirect: true });
+        setUser(response.data);
+      } catch {
         try {
-          const resp2 = await adminAuthService.me();
-          setUser(resp2.data);
-        } catch (e) {
-          console.error("Impossible de restaurer la session :", error);
-
+          const response = await adminAuthService.me({
+            skipAuthRedirect: true,
+          });
+          setUser(response.data);
+        } catch {
           localStorage.removeItem("access_token");
           setUser(null);
         }
@@ -72,12 +61,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     restoreSession();
   }, []);
-
-  /**
-   * On attend que la session soit restaurée
-   */
-  // Always provide the context so pages can react to the `loading` state
-  // (avoids redirecting before restoreSession completes).
 
   return (
     <AuthContext.Provider

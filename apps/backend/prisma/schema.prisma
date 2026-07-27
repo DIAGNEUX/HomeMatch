@@ -32,6 +32,7 @@ model User {
   agency         Agency?         @relation
   demandesVisite DemandeVisite[]
   favorites      Favorite[]
+  isActive       Boolean         @default(true)
 }
 
 model Agency {
