@@ -21,6 +21,33 @@ const NEXT_QUESTIONS: Record<(typeof REQUIRED_CRITERIA)[number], string> = {
   maxPrice: 'Quel est votre budget maximum ?',
 };
 
+function normalizeMessage(message: string) {
+  return message
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
+function getSmallTalkResponse(message: string) {
+  const normalizedMessage = normalizeMessage(message);
+  const hasThanks = /\b(merci|remerciements?)\b/.test(normalizedMessage);
+  const hasSearchSignal =
+    /\b(cherche|recherche|acheter|achat|vendre|vente|louer|location|appartement|appart|maison|villa|studio|budget|max|maximum|prix|euros?)\b/.test(
+      normalizedMessage,
+    );
+
+  if (hasThanks && !hasSearchSignal) {
+    return 'Avec plaisir. Je reste disponible si vous souhaitez affiner votre recherche.';
+  }
+
+  if (/^(bonjour|salut|hello|bonsoir)[.! ]*$/.test(normalizedMessage)) {
+    return 'Bonjour, décrivez-moi le bien que vous recherchez et je vous aiderai à trouver les annonces les plus adaptées.';
+  }
+
+  return null;
+}
+
 function buildAnnonceFilters(context: ConversationContext) {
   return {
     ville: context.city,
@@ -37,10 +64,7 @@ function buildAnnonceFilters(context: ConversationContext) {
 }
 
 function extractExplicitCriteria(message: string): Partial<ConversationContext> {
-  const normalizedMessage = message
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
+  const normalizedMessage = normalizeMessage(message);
 
   const criteria: Partial<ConversationContext> = {};
 
@@ -93,6 +117,16 @@ async processMessage(
 ) {
 
   const context = this.conversationStore.get(conversationId);
+  const smallTalkResponse = getSmallTalkResponse(message);
+
+  if (smallTalkResponse) {
+    return {
+      intent: 'SMALL_TALK',
+      criteria: context,
+      missingCriteria: [],
+      message: smallTalkResponse,
+    };
+  }
 
     console.log(context);
 
@@ -134,7 +168,7 @@ async processMessage(
   if (annonces.length > 0) {
     return {
       criteria: context,
-      annonces,
+      annonces: annonces.slice(0, 5),
     };
   }
 

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { getImageUrl } from "@/lib/image-url";
 import { Bath, BedDouble, Home, MapPin, Ruler } from "lucide-react";
 
@@ -38,7 +39,11 @@ export default function RecommendationCard({
   );
 
   return (
-    <article className="overflow-hidden rounded-lg border border-gray-100 bg-white shadow-[0_18px_40px_-30px_rgba(11,22,44,0.7)]">
+    <Link
+      href={`/annonces/${annonce.id}`}
+      className="block overflow-hidden rounded-lg border border-gray-100 bg-white shadow-[0_18px_40px_-30px_rgba(11,22,44,0.7)] transition hover:-translate-y-0.5 hover:shadow-[0_24px_46px_-28px_rgba(11,22,44,0.75)] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#5FC2BA]/40"
+      aria-label={`Voir le détail de l'annonce ${annonce.titre}`}
+    >
       <div className="relative h-36 bg-[#F3F6F8]">
         {imageUrl ? (
           isLocalBackend ? (
@@ -105,6 +110,6 @@ export default function RecommendationCard({
           </p>
         ))}
       </div>
-    </article>
+    </Link>
   );
 }

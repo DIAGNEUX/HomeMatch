@@ -25,23 +25,26 @@ const welcomeMessage: Message = {
 export default function AssistantChat({ initialMessage = "" }: AssistantChatProps) {
   const hasSentInitialMessage = useRef(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  const { messages, recommendations, loading, error, sendMessage } =
-    useConversation();
+  const { messages, loading, error, sendMessage } = useConversation();
 
   useEffect(() => {
     const trimmedInitialMessage = initialMessage.trim();
 
-    if (!trimmedInitialMessage || hasSentInitialMessage.current) {
+    if (
+      !trimmedInitialMessage ||
+      hasSentInitialMessage.current ||
+      messages.length > 0
+    ) {
       return;
     }
 
     hasSentInitialMessage.current = true;
     void sendMessage(trimmedInitialMessage);
-  }, [initialMessage, sendMessage]);
+  }, [initialMessage, messages.length, sendMessage]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, recommendations, loading]);
+  }, [messages, loading]);
 
   const displayedMessages = messages.length > 0 ? messages : [welcomeMessage];
 
@@ -64,7 +67,12 @@ export default function AssistantChat({ initialMessage = "" }: AssistantChatProp
 
         <div className="flex flex-1 flex-col gap-6 pb-8">
           {displayedMessages.map((message) => (
-            <MessageBubble key={message.id} message={message} />
+            <div key={message.id} className="space-y-4">
+              <MessageBubble message={message} />
+              {message.recommendations && (
+                <RecommendationList recommendations={message.recommendations} />
+              )}
+            </div>
           ))}
 
           {loading && <TypingIndicator />}
@@ -74,8 +82,6 @@ export default function AssistantChat({ initialMessage = "" }: AssistantChatProp
               {error}
             </p>
           )}
-
-          <RecommendationList recommendations={recommendations} />
           <div ref={bottomRef} />
         </div>
 

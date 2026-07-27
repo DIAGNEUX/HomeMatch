@@ -6,6 +6,7 @@ export type ChatMessageDto = {
 };
 export type ConversationIntent =
   | "SEARCH_PROPERTY"
+  | "SMALL_TALK"
   | "UNKNOWN";
 export type ConversationResponse = {
   conversationId: string;
@@ -45,4 +46,5 @@ export type Message = {
   id: string;
   role: "user" | "assistant";
   content: string;
+  recommendations?: Recommendation[];
 };

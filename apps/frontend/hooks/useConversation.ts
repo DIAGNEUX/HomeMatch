@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import assistantService from "@/services/assistant.service";
 
@@ -10,6 +10,32 @@ import {
   RecommendationPayload,
 } from "@/types/assistant";
 import { Annonce } from "@/types/announcement";
+
+const STORAGE_KEY = "homematch-assistant-conversation";
+
+type StoredConversation = {
+  conversationId: string | null;
+  messages: Message[];
+};
+
+function readStoredConversation(): StoredConversation | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const storedConversation = window.sessionStorage.getItem(STORAGE_KEY);
+
+  if (!storedConversation) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(storedConversation) as StoredConversation;
+  } catch {
+    window.sessionStorage.removeItem(STORAGE_KEY);
+    return null;
+  }
+}
 
 function isRecommendationPayload(
   recommendation: RecommendationPayload,
@@ -34,15 +60,27 @@ function normalizeRecommendations(
 }
 
 export function useConversation() {
-  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [conversationId, setConversationId] = useState<string | null>(
+    () => readStoredConversation()?.conversationId ?? null,
+  );
 
-  const [messages, setMessages] = useState<Message[]>([]);
-
-  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [messages, setMessages] = useState<Message[]>(
+    () => readStoredConversation()?.messages ?? [],
+  );
 
   const [loading, setLoading] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    window.sessionStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        conversationId,
+        messages,
+      }),
+    );
+  }, [conversationId, messages]);
 
   const sendMessage = async (message: string) => {
     if (!message.trim()) {
@@ -59,7 +97,6 @@ export function useConversation() {
     ]);
 
     setError(null);
-    setRecommendations([]);
     setLoading(true);
 
     try {
@@ -95,12 +132,9 @@ export function useConversation() {
             id: crypto.randomUUID(),
             role: "assistant",
             content: assistantMessage,
+            recommendations: normalizedRecommendations,
           },
         ]);
-      }
-
-      if (normalizedRecommendations.length) {
-        setRecommendations(normalizedRecommendations);
       }
     } catch (error) {
       console.error(error);
@@ -111,8 +145,8 @@ export function useConversation() {
   };
 
   return {
+    conversationId,
     messages,
-    recommendations,
     loading,
     error,
     sendMessage,
