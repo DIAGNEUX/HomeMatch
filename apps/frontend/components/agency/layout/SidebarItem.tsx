@@ -8,18 +8,20 @@ interface SidebarItemProps {
   href: string;
   label: string;
   icon: LucideIcon;
+  exact?: boolean;
 }
 
 export default function SidebarItem({
   href,
   label,
   icon: Icon,
+  exact = false,
 }: SidebarItemProps) {
   const pathname = usePathname();
 
-  const isActive =
-    pathname === href ||
-    (href !== "/agency" && pathname.startsWith(href));
+  const isActive = exact
+    ? pathname === href
+    : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <Link

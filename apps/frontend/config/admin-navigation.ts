@@ -1,18 +1,14 @@
-import { LayoutDashboard, Users, Building, House, User } from "lucide-react";
+import { LayoutDashboard, Building, Users } from "lucide-react";
 
 export const adminNavigation = [
   {
     label: "Tableau de bord",
     href: "/homematch/intranet",
     icon: LayoutDashboard,
+    exact: true,
   },
   {
-    label: "Annonces",
-    href: "/homematch/intranet/announcements",
-    icon: House,
-  },
-  {
-    label: "Agences",
+    label: "Agences & annonces",
     href: "/homematch/intranet/agencies",
     icon: Building,
   },
@@ -20,10 +16,5 @@ export const adminNavigation = [
     label: "Utilisateurs",
     href: "/homematch/intranet/users",
     icon: Users,
-  },
-  {
-    label: "Profil",
-    href: "/homematch/intranet/profile",
-    icon: User,
   },
 ];

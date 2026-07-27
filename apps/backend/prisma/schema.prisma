@@ -30,6 +30,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   agency Agency? @relation
+  isActive Boolean @default(true)
 }
 
 model Agency {

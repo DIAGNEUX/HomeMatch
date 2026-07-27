@@ -70,6 +70,10 @@ export class AuthService {
     throw new UnauthorizedException('Invalid credentials');
   }
 
+  if (!user.isActive) {
+    throw new UnauthorizedException('Ce compte a été désactivé.');
+  }
+
   const isPasswordValid = await bcrypt.compare(
     loginDto.password,
     user.password,
@@ -81,4 +85,5 @@ export class AuthService {
 
   return this.generateAuthResponse(user);
 }
+
 }
