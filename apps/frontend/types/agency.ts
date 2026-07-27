@@ -20,6 +20,7 @@ export interface CreateAgencyDto {
   name: string;
   description?: string;
   siret: string;
+  phone?: string;
   website?: string;
   address: string;
   city: string;
@@ -29,6 +30,7 @@ export interface CreateAgencyDto {
 export interface UpdateAgencyDto {
   name?: string;
   description?: string;
+  phone?: string;
   website?: string;
   address?: string;
   city?: string;

@@ -54,6 +54,13 @@ export interface RegisterAgencyDto {
   phone?: string;
 }
 
+export interface UpdateUserDto {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+}
+
 export interface AuthContextType {
   user: User | null;
   loading: boolean;
@@ -61,4 +68,5 @@ export interface AuthContextType {
 
   login: (token: string, user: User) => void;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }

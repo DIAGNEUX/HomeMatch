@@ -1,13 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, MapPin, ImageOff } from "lucide-react";
+import {
+  ArrowLeft,
+  CalendarDays,
+  ImageOff,
+  MapPin,
+  Phone,
+  Send,
+} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import announcementService from "@/services/announcement.service";
-import type { Annonce } from "@/types/announcement";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import FavoriteButton from "@/components/user/favorites/FavoriteButton";
+import { useAuth } from "@/hooks/useAuth";
 import { getImageUrl } from "@/lib/image-url";
+import announcementService from "@/services/announcement.service";
+import visitRequestService from "@/services/visit-request.service";
+import type { Annonce } from "@/types/announcement";
 
 const typeBienLabel: Record<Annonce["typeBien"], string> = {
   APPARTEMENT: "Appartement",
@@ -23,15 +41,47 @@ const typeAnnonceLabel: Record<Annonce["typeAnnonce"], string> = {
   LOCATION: "Location",
 };
 
+const getVisitRequestErrorMessage = (error: unknown) => {
+  if (typeof error !== "object" || error === null || !("response" in error)) {
+    return "Impossible d'envoyer la demande de visite.";
+  }
+
+  const response = (
+    error as {
+      response?: {
+        data?: {
+          message?: unknown;
+        };
+      };
+    }
+  ).response;
+
+  return typeof response?.data?.message === "string"
+    ? response.data.message
+    : "Impossible d'envoyer la demande de visite.";
+};
+
 interface AnnonceDetailProps {
   id: string;
 }
 
 export default function AnnonceDetail({ id }: AnnonceDetailProps) {
+  const { user, loading: authLoading } = useAuth();
   const [annonce, setAnnonce] = useState<Annonce | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
+  const [visitDialogOpen, setVisitDialogOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [requestedVisitDate, setRequestedVisitDate] = useState("");
+  const [visitRequestError, setVisitRequestError] = useState<string | null>(
+    null
+  );
+  const [visitRequestSuccess, setVisitRequestSuccess] = useState<string | null>(
+    null
+  );
+  const [submittingVisitRequest, setSubmittingVisitRequest] = useState(false);
+  const [phoneVisible, setPhoneVisible] = useState(false);
 
   useEffect(() => {
     const fetchAnnonce = async () => {
@@ -78,6 +128,66 @@ export default function AnnonceDetail({ id }: AnnonceDetailProps) {
   }
 
   const images = annonce.images ?? [];
+  const agency = annonce.agency;
+
+  const openVisitDialog = () => {
+    setVisitRequestError(null);
+    setVisitRequestSuccess(null);
+
+    if (authLoading) {
+      return;
+    }
+
+    if (!user) {
+      setVisitRequestError("Connectez-vous pour demander une visite.");
+      setVisitDialogOpen(true);
+      return;
+    }
+
+    if (user.role !== "USER") {
+      setVisitRequestError(
+        "Seul un compte utilisateur peut demander une visite."
+      );
+      setVisitDialogOpen(true);
+      return;
+    }
+
+    setVisitDialogOpen(true);
+  };
+
+  const submitVisitRequest = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setVisitRequestError(null);
+    setVisitRequestSuccess(null);
+
+    if (!requestedVisitDate) {
+      setVisitRequestError("Choisissez une date de visite souhaitée.");
+      return;
+    }
+
+    const visitDate = new Date(requestedVisitDate);
+
+    if (visitDate <= new Date()) {
+      setVisitRequestError("La date de visite doit être dans le futur.");
+      return;
+    }
+
+    try {
+      setSubmittingVisitRequest(true);
+      await visitRequestService.create(annonce.id, {
+        message,
+        requestedVisitDate: visitDate.toISOString(),
+      });
+      setVisitRequestSuccess("Votre demande de visite a bien été envoyée.");
+      setMessage("");
+      setRequestedVisitDate("");
+      setVisitDialogOpen(false);
+    } catch (error) {
+      setVisitRequestError(getVisitRequestErrorMessage(error));
+    } finally {
+      setSubmittingVisitRequest(false);
+    }
+  };
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
@@ -132,70 +242,209 @@ export default function AnnonceDetail({ id }: AnnonceDetailProps) {
         )}
       </div>
 
-      <div className="mt-6 flex items-start justify-between gap-4">
+      <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">
-            {annonce.titre}
-          </h1>
-          <div className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
-            <MapPin size={14} />
-            {annonce.adresse}, {annonce.ville}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-semibold text-foreground">
+                {annonce.titre}
+              </h1>
+              <div className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
+                <MapPin size={14} />
+                {annonce.adresse}, {annonce.ville}
+              </div>
+            </div>
+            <div className="flex shrink-0 items-center gap-2">
+              <Badge
+                variant="outline"
+                className="border-gray-200 bg-gray-50 text-gray-700"
+              >
+                {typeAnnonceLabel[annonce.typeAnnonce]}
+              </Badge>
+              <FavoriteButton announcementId={annonce.id} className="bg-white" />
+            </div>
           </div>
-        </div>
-        <Badge variant="outline" className="border-gray-200 bg-gray-50 text-gray-700">
-          {typeAnnonceLabel[annonce.typeAnnonce]}
-        </Badge>
-      </div>
 
-      <p className="mt-4 text-2xl font-semibold text-[#0B162C]">
-        {annonce.prix.toLocaleString("fr-FR")} €
-      </p>
-
-      <div className="mt-6 grid grid-cols-2 gap-4 rounded-2xl border border-border p-5 sm:grid-cols-4">
-        <div>
-          <p className="text-xs text-muted-foreground">Type de bien</p>
-          <p className="font-medium text-foreground">
-            {typeBienLabel[annonce.typeBien]}
+          <p className="mt-4 text-2xl font-semibold text-[#0B162C]">
+            {annonce.prix.toLocaleString("fr-FR")} €
           </p>
-        </div>
-        <div>
-          <p className="text-xs text-muted-foreground">Surface</p>
-          <p className="font-medium text-foreground">{annonce.surface} m²</p>
-        </div>
-        <div>
-          <p className="text-xs text-muted-foreground">Pièces</p>
-          <p className="font-medium text-foreground">{annonce.nombrePieces}</p>
-        </div>
-        <div>
-          <p className="text-xs text-muted-foreground">Chambres</p>
-          <p className="font-medium text-foreground">{annonce.nombreChambres}</p>
-        </div>
-        <div>
-          <p className="text-xs text-muted-foreground">Salles de bain</p>
-          <p className="font-medium text-foreground">{annonce.nombreSallesBains}</p>
-        </div>
-        {annonce.etage != null && (
-          <div>
-            <p className="text-xs text-muted-foreground">Étage</p>
-            <p className="font-medium text-foreground">{annonce.etage}</p>
+
+          <div className="mt-6 grid grid-cols-2 gap-4 rounded-2xl border border-border p-5 sm:grid-cols-4">
+            <div>
+              <p className="text-xs text-muted-foreground">Type de bien</p>
+              <p className="font-medium text-foreground">
+                {typeBienLabel[annonce.typeBien]}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Surface</p>
+              <p className="font-medium text-foreground">{annonce.surface} m²</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Pièces</p>
+              <p className="font-medium text-foreground">
+                {annonce.nombrePieces}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Chambres</p>
+              <p className="font-medium text-foreground">
+                {annonce.nombreChambres}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Salles de bain</p>
+              <p className="font-medium text-foreground">
+                {annonce.nombreSallesBains}
+              </p>
+            </div>
+            {annonce.etage != null && (
+              <div>
+                <p className="text-xs text-muted-foreground">Étage</p>
+                <p className="font-medium text-foreground">{annonce.etage}</p>
+              </div>
+            )}
+            {annonce.anneeConstruction != null && (
+              <div>
+                <p className="text-xs text-muted-foreground">
+                  Année de construction
+                </p>
+                <p className="font-medium text-foreground">
+                  {annonce.anneeConstruction}
+                </p>
+              </div>
+            )}
           </div>
-        )}
-        {annonce.anneeConstruction != null && (
-          <div>
-            <p className="text-xs text-muted-foreground">Année de construction</p>
-            <p className="font-medium text-foreground">
-              {annonce.anneeConstruction}
+
+          <div className="mt-6">
+            <h2 className="text-lg font-semibold text-foreground">
+              Description
+            </h2>
+            <p className="mt-2 whitespace-pre-line text-sm leading-6 text-muted-foreground">
+              {annonce.description}
             </p>
           </div>
-        )}
+        </div>
+
+        <aside className="rounded-2xl border border-border bg-white p-5 shadow-sm lg:sticky lg:top-6">
+          <div>
+            <p className="text-xs font-medium uppercase text-muted-foreground">
+              Agence
+            </p>
+            <p className="mt-1 font-semibold text-[#0B162C]">
+              {agency?.name ?? "Agence immobilière"}
+            </p>
+            {agency?.city && (
+              <p className="mt-1 text-sm text-muted-foreground">
+                {agency.city}
+              </p>
+            )}
+          </div>
+
+          {agency?.description && (
+            <p className="mt-4 max-h-16 overflow-hidden text-sm leading-5 text-muted-foreground">
+              {agency.description}
+            </p>
+          )}
+
+          <div className="mt-5 space-y-3">
+            <Button
+              type="button"
+              className="h-10 w-full bg-[#0B162C] text-white hover:bg-[#1C2942]"
+              onClick={openVisitDialog}
+            >
+              <CalendarDays className="size-4" />
+              Demander une visite
+            </Button>
+
+            {agency?.phone && (
+              <Button
+                type="button"
+                variant="outline"
+                className="h-10 w-full"
+                onClick={() => setPhoneVisible((current) => !current)}
+              >
+                <Phone className="size-4" />
+                {phoneVisible ? agency.phone : "Voir le numéro"}
+              </Button>
+            )}
+          </div>
+
+          {visitRequestSuccess && (
+            <p className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+              {visitRequestSuccess}
+            </p>
+          )}
+        </aside>
       </div>
 
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold text-foreground">Description</h2>
-        <p className="mt-2 whitespace-pre-line text-sm leading-6 text-muted-foreground">
-          {annonce.description}
-        </p>
-      </div>
+      <Dialog open={visitDialogOpen} onOpenChange={setVisitDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Demander une visite</DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={submitVisitRequest} className="space-y-4">
+            <div className="space-y-1.5">
+              <label
+                htmlFor="visit-message"
+                className="text-sm font-medium text-foreground"
+              >
+                Message
+              </label>
+              <textarea
+                id="visit-message"
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
+                rows={4}
+                className="w-full resize-none rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none transition focus:border-ring focus:ring-3 focus:ring-ring/50"
+                placeholder="Bonjour, je souhaite visiter ce bien."
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label
+                htmlFor="requested-visit-date"
+                className="text-sm font-medium text-foreground"
+              >
+                Date souhaitée
+              </label>
+              <Input
+                id="requested-visit-date"
+                type="datetime-local"
+                value={requestedVisitDate}
+                onChange={(event) => setRequestedVisitDate(event.target.value)}
+              />
+            </div>
+
+            {visitRequestError && (
+              <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+                {visitRequestError}
+              </p>
+            )}
+
+            <div className="flex justify-end gap-3 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setVisitDialogOpen(false)}
+              >
+                Annuler
+              </Button>
+              <Button
+                type="submit"
+                disabled={
+                  submittingVisitRequest || !user || user.role !== "USER"
+                }
+                className="bg-[#0B162C] text-white hover:bg-[#1C2942]"
+              >
+                <Send className="size-4" />
+                {submittingVisitRequest ? "Envoi..." : "Envoyer"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

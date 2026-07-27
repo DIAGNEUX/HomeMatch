@@ -9,6 +9,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AgenciesModule } from './modules/agencies/agencies.module';
 import { AnnouncementsModule } from './modules/announcements/announcements.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { VisitRequestsModule } from './modules/visit-requests/visit-requests.module';
+import { FavoritesModule } from './modules/favorites/favorites.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { AdminModule } from './modules/admin/admin.module';
     AdminModule,
     AgenciesModule,
     AnnouncementsModule,
+    VisitRequestsModule,
+    FavoritesModule,
   ],
   controllers: [AppController],
 })

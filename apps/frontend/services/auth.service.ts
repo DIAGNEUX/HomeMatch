@@ -3,6 +3,7 @@ import {
   LoginDto,
   RegisterDto,
   RegisterAgencyDto,
+  User,
 } from "@/types/auth";
 
 const authService = {
@@ -19,7 +20,7 @@ const authService = {
   },
 
   me() {
-    return api.get("/auth/me");
+    return api.get<User>("/auth/me");
   },
 };
 

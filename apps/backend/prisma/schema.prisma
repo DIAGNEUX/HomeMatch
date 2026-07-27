@@ -14,53 +14,54 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  firstName String   @db.VarChar(100)
-  lastName  String   @db.VarChar(100)
+  firstName String @db.VarChar(100)
+  lastName  String @db.VarChar(100)
 
-  email     String   @unique @db.VarChar(255)
-  password  String   @db.VarChar(255)
+  email    String @unique @db.VarChar(255)
+  password String @db.VarChar(255)
 
-  phone     String?  @db.VarChar(20)
+  phone String? @db.VarChar(20)
 
-  role      Role     @default(USER)
+  role Role @default(USER)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  agency Agency? @relation
+  agency         Agency?         @relation
+  demandesVisite DemandeVisite[]
+  favorites      Favorite[]
 }
 
 model Agency {
-  id          String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  name        String   @db.VarChar(255)
-  description String?  @db.VarChar(1000)
+  name        String  @db.VarChar(255)
+  description String? @db.VarChar(1000)
 
-  siret       String   @unique @db.VarChar(14)
+  siret String @unique @db.VarChar(14)
 
-  phone       String?  @db.VarChar(20)
+  phone String? @db.VarChar(20)
 
-  website     String?  @db.VarChar(255)
+  website String? @db.VarChar(255)
 
-  address     String   @db.VarChar(255)
+  address String @db.VarChar(255)
 
-  city        String   @db.VarChar(100)
+  city String @db.VarChar(100)
 
-  postalCode  String   @db.VarChar(20)
+  postalCode String @db.VarChar(20)
 
-  logo        String?  @db.VarChar(255)
+  logo String? @db.VarChar(255)
 
-  userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   annonces Annonce[]
 }
-
 
 enum TypeAnnonce {
   VENTE
@@ -81,17 +82,25 @@ enum StatutAnnonce {
   PUBLIEE
 }
 
+enum StatutDemandeVisite {
+  EN_ATTENTE
+  ACCEPTEE
+  REFUSEE
+  ANNULEE
+  TERMINEE
+}
+
 model Annonce {
-  id                String       @id @default(cuid())
+  id String @id @default(cuid())
 
-  titre             String       @db.VarChar(255)
-  description       String
+  titre       String @db.VarChar(255)
+  description String
 
-  typeAnnonce       TypeAnnonce
-  typeBien          TypeBien
+  typeAnnonce TypeAnnonce
+  typeBien    TypeBien
 
-  prix              Float
-  surface           Float
+  prix    Float
+  surface Float
 
   nombrePieces      Int
   nombreSallesBains Int
@@ -100,21 +109,23 @@ model Annonce {
   etage             Int?
   anneeConstruction Int?
 
-  adresse           String       @db.VarChar(255)
-  ville             String       @db.VarChar(100)
+  adresse String @db.VarChar(255)
+  ville   String @db.VarChar(100)
 
-  agencyId          String
-  agency            Agency       @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  agencyId String
+  agency   Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
 
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  statut         StatutAnnonce   @default(BROUILLON)
+  images         Image[]
+  demandesVisite DemandeVisite[]
+  favorites      Favorite[]
 
   @@index([agencyId])
   @@index([ville])
   @@index([typeAnnonce, typeBien])
   @@map("annonces")
-  statut StatutAnnonce @default(BROUILLON)
-  images Image[]
 }
 
 model Image {
@@ -126,4 +137,40 @@ model Image {
 
   @@index([annonceId])
   @@map("images")
+}
+
+model DemandeVisite {
+  id                  String              @id @default(cuid())
+  dateDemande         DateTime            @default(now())
+  dateVisiteSouhaitee DateTime
+  message             String
+  statut              StatutDemandeVisite @default(EN_ATTENTE)
+
+  annonceId String
+  annonce   Annonce @relation(fields: [annonceId], references: [id], onDelete: Cascade)
+
+  utilisateurId String
+  utilisateur   User   @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+
+  updatedAt DateTime @updatedAt
+
+  @@index([annonceId])
+  @@index([utilisateurId])
+  @@index([statut])
+  @@map("demandes_visite")
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  annonceId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  annonce Annonce @relation(fields: [annonceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, annonceId])
+  @@index([userId])
+  @@index([annonceId])
+  @@map("favorites")
 }

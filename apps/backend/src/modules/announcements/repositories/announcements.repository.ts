@@ -32,7 +32,7 @@ export class AnnouncementsRepository {
   findById(id: string): Promise<Annonce | null> {
     return this.prisma.annonce.findUnique({
       where: { id },
-      include: { images: true },
+      include: { images: true, agency: true },
     });
   }
 

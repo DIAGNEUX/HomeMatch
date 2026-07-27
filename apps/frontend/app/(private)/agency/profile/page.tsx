@@ -1,3 +1,5 @@
+import AgencyProfileForm from "@/components/agency/profile/AgencyProfileForm";
+
 export default function ProfilePage() {
-  return <h1>Profil agence</h1>;
+  return <AgencyProfileForm />;
 }

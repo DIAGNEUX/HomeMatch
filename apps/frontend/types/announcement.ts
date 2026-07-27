@@ -1,3 +1,5 @@
+import type { Agency } from "./agency";
+
 export type TypeAnnonce = "VENTE" | "LOCATION";
 
 export type TypeBien =
@@ -34,6 +36,7 @@ export type Annonce = {
   ville: string;
   statut: StatutAnnonce;
   agencyId: string;
+  agency?: Agency;
   images: AnnonceImage[];
   createdAt: string;
   updatedAt: string;

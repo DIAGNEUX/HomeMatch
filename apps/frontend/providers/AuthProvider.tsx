@@ -35,6 +35,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(null);
   };
 
+  const refreshUser = async () => {
+    const response = await authService.me();
+    setUser(response.data);
+  };
+
   /**
    * Restaurer la session au démarrage
    */
@@ -48,9 +53,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
 
       try {
-        const response = await authService.me();
-
-        setUser(response.data);
+        await refreshUser();
       } catch (error: any) {
         // If /auth/me fails (403/401), try /admin/me as a fallback for admin tokens
         try {
@@ -84,6 +87,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         isAuthenticated,
         login,
         logout,
+        refreshUser,
       }}
     >
       {children}
