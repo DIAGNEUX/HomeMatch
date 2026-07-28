@@ -32,15 +32,16 @@ export default function AssistantChat({ initialMessage = "" }: AssistantChatProp
 
     if (
       !trimmedInitialMessage ||
-      hasSentInitialMessage.current ||
-      messages.length > 0
+      hasSentInitialMessage.current
     ) {
       return;
     }
 
     hasSentInitialMessage.current = true;
-    void sendMessage(trimmedInitialMessage);
-  }, [initialMessage, messages.length, sendMessage]);
+    void sendMessage(trimmedInitialMessage, {
+      startNewConversation: true,
+    });
+  }, [initialMessage, sendMessage]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });

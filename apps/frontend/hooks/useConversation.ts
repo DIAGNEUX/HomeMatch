@@ -18,6 +18,10 @@ type StoredConversation = {
   messages: Message[];
 };
 
+type SendMessageOptions = {
+  startNewConversation?: boolean;
+};
+
 function readStoredConversation(): StoredConversation | null {
   if (typeof window === "undefined") {
     return null;
@@ -82,32 +86,41 @@ export function useConversation() {
     );
   }, [conversationId, messages]);
 
-  const sendMessage = async (message: string) => {
+  const sendMessage = async (
+    message: string,
+    options: SendMessageOptions = {},
+  ) => {
     if (!message.trim()) {
       return;
     }
 
-    setMessages((previous) => [
-      ...previous,
-      {
-        id: crypto.randomUUID(),
-        role: "user",
-        content: message,
-      },
-    ]);
+    const shouldStartNewConversation = options.startNewConversation ?? false;
+    const userMessage: Message = {
+      id: crypto.randomUUID(),
+      role: "user",
+      content: message,
+    };
+
+    if (shouldStartNewConversation) {
+      setConversationId(null);
+      setMessages([userMessage]);
+    } else {
+      setMessages((previous) => [...previous, userMessage]);
+    }
 
     setError(null);
     setLoading(true);
 
     try {
-      const payload = conversationId
-        ? {
-            conversationId,
-            message,
-          }
-        : {
-            message,
-          };
+      const payload =
+        !shouldStartNewConversation && conversationId
+          ? {
+              conversationId,
+              message,
+            }
+          : {
+              message,
+            };
 
       const response = await assistantService.sendMessage(payload);
 
