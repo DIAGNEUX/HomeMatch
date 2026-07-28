@@ -132,6 +132,7 @@ model Annonce {
 model Image {
   id        String   @id @default(cuid())
   url       String
+  publicId  String?
   annonceId String
   annonce   Annonce  @relation(fields: [annonceId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())

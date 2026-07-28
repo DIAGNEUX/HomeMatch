@@ -15,6 +15,7 @@ export type StatutAnnonce = "BROUILLON" | "PUBLIEE";
 export type AnnonceImage = {
   id: string;
   url: string;
+  publicId?: string | null;
   annonceId: string;
   createdAt: string;
 };

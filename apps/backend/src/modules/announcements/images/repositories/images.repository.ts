@@ -6,10 +6,18 @@ import { Image } from '@prisma/client';
 export class ImagesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(url: string, annonceId: string): Promise<Image> {
+  create(data: {
+    url: string;
+    annonceId: string;
+    publicId?: string | null;
+  }): Promise<Image> {
     return this.prisma.image.create({
-      data: { url, annonceId },
+      data,
     });
+  }
+
+  countByAnnonceId(annonceId: string): Promise<number> {
+    return this.prisma.image.count({ where: { annonceId } });
   }
 
   findById(id: string): Promise<Image | null> {

@@ -6,11 +6,18 @@ import { AgenciesModule } from '../agencies/agencies.module';
 import { ImagesController } from './images/images.controller';
 import { ImagesService } from './images/images.service';
 import { ImagesRepository } from './images/repositories/images.repository';
+import { CloudinaryService } from './images/cloudinary.service';
 
 @Module({
   imports: [AgenciesModule],
   controllers: [AnnouncementsController, ImagesController],
-  providers: [AnnouncementsService, AnnouncementsRepository, ImagesService, ImagesRepository],
+  providers: [
+    AnnouncementsService,
+    AnnouncementsRepository,
+    ImagesService,
+    ImagesRepository,
+    CloudinaryService,
+  ],
   exports: [AnnouncementsService],
 })
 export class AnnouncementsModule {}
