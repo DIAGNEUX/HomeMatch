@@ -19,9 +19,6 @@ if (!baseURL) {
 export const api = axios.create({
   baseURL,
   withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 api.interceptors.response.use(
@@ -35,6 +32,7 @@ api.interceptors.response.use(
       localStorage.removeItem("access_token");
 
       const path = window.location.pathname || "";
+
       if (path.startsWith("/homematch")) {
         window.location.href = "/homematch/login";
       } else if (path.startsWith("/agency")) {
@@ -48,4 +46,4 @@ api.interceptors.response.use(
   }
 );
 
-// api.get("/auth/me")
+// api.get("/auth/me");
