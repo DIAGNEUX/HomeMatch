@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 import authService from "@/services/auth.service";
 import agencyService from "@/services/agency.service";
@@ -25,56 +26,103 @@ type Step1Data = Pick<
 
 type Step2Data = CreateAgencyDto;
 
+const optionalText = (value?: string) => {
+  const trimmedValue = value?.trim();
+
+  return trimmedValue ? trimmedValue : undefined;
+};
+
+const getErrorMessage = (error: unknown) => {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data as
+      | { message?: unknown; error?: unknown }
+      | undefined;
+    const message = data?.message ?? data?.error;
+
+    if (Array.isArray(message)) {
+      return message.join("\n");
+    }
+
+    if (typeof message === "string") {
+      return message;
+    }
+  }
+
+  return "Une erreur est survenue.";
+};
+
 export default function AgencyRegisterForm() {
   const router = useRouter();
 
-  const { login } = useAuth();
+  const { login, user } = useAuth();
 
   const [step, setStep] = useState(1);
 
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [accountData, setAccountData] =
     useState<Step1Data | null>(null);
 
+  useEffect(() => {
+    if (user?.role === "AGENCY" && !accountData) {
+      setStep(2);
+    }
+  }, [accountData, user?.role]);
+
   const handleNext = (data: Step1Data) => {
+    setErrorMessage(null);
     setAccountData(data);
     setStep(2);
   };
 
   const handleBack = () => {
+    setErrorMessage(null);
     setStep(1);
   };
 
   const handleFinish = async (
     agencyData: Step2Data
   ) => {
-    if (!accountData) return;
+    if (!accountData && user?.role !== "AGENCY") return;
 
     try {
       setLoading(true);
+      setErrorMessage(null);
 
       // Création du compte agence
-      const response =
-        await authService.registerAgency({
-          firstName: accountData.firstName,
-          lastName: accountData.lastName,
-          email: accountData.email,
-          password: accountData.password,
-          phone: accountData.phone,
-        });
+      if (accountData) {
+        const response =
+          await authService.registerAgency({
+            firstName: accountData.firstName,
+            lastName: accountData.lastName,
+            email: accountData.email,
+            password: accountData.password,
+            phone: accountData.phone,
+          });
 
-      // Connexion automatique
-      login(response.data.user);
+        // Connexion automatique
+        login(response.data.user);
+      }
 
       // Création de l'agence
-      await agencyService.create(agencyData);
+      const agencyPayload: CreateAgencyDto = {
+        name: agencyData.name.trim(),
+        siret: agencyData.siret.trim(),
+        address: agencyData.address.trim(),
+        city: agencyData.city.trim(),
+        postalCode: agencyData.postalCode.trim(),
+        description: optionalText(agencyData.description),
+        website: optionalText(agencyData.website),
+      };
+
+      await agencyService.create(agencyPayload);
 
       router.push("/agency");
       router.refresh();
     } catch (error) {
       console.error(error);
-      alert("Une erreur est survenue.");
+      setErrorMessage(getErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -115,6 +163,12 @@ export default function AgencyRegisterForm() {
           />
         </div>
       </div>
+
+      {errorMessage && (
+        <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+          {errorMessage}
+        </p>
+      )}
 
       {step === 1 && (
         <AgencyRegisterStep1

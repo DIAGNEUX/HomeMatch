@@ -7,9 +7,11 @@
     "icon": "./assets/homematch-icon.png",
     "userInterfaceStyle": "light",
     "ios": {
+      "bundleIdentifier": "com.homematch.mobile",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.homematch.mobile",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/homematch-icon.png",
@@ -20,6 +22,12 @@
     },
     "web": {
       "favicon": "./assets/homematch-icon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f9031089-1afc-44ab-a0f7-283517267e51"
+      }
+    },
+    "owner": "aliounediagne10"
   }
 }

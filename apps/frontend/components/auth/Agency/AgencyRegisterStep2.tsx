@@ -30,6 +30,7 @@ export default function AgencyForm({
   defaultValues,
   onBack,
   onSubmit,
+  loading,
 }: AgencyFormProps) {
   const {
     register,
@@ -99,10 +100,10 @@ export default function AgencyForm({
 
         <Button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || loading}
           className="h-12 flex-1 cursor-pointer rounded-2xl bg-primary px-4 font-semibold text-white hover:bg-primary-800"
         >
-          Créer mon agence
+          {isSubmitting || loading ? "Création..." : "Créer mon agence"}
         </Button>
       </div>
     </form>
