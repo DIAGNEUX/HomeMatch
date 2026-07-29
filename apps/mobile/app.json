@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "HomeMatch",
+    "slug": "homematch-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/homematch-icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/homematch-icon.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/homematch-icon.png"
+    }
+  }
+}
