@@ -115,6 +115,8 @@ L'API expose notamment les modules suivants:
 - `visit-requests`: creation et suivi des demandes de visite.
 - `ai/chat`: assistant de recherche conversationnelle.
 
+La route `POST /admin/register` est protegee par JWT et role `ADMIN`. Le premier compte administrateur doit etre cree avec `npm run admin:create` depuis `apps/backend`, ou directement en base de donnees.
+
 Swagger est disponible en local sur:
 
 ```text
@@ -163,6 +165,11 @@ DATABASE_URL="postgresql://postgres:postgres@localhost:5432/homematch"
 JWT_SECRET="your-secret-key"
 JWT_EXPIRES_IN="1d"
 
+ADMIN_EMAIL="admin@example.com"
+ADMIN_PASSWORD="change-me-with-a-strong-password"
+ADMIN_FIRST_NAME="Admin"
+ADMIN_LAST_NAME="HomeMatch"
+
 OPENAI_API_KEY="your-openai-api-key"
 
 CLOUDINARY_CLOUD_NAME="your-cloud-name"
@@ -179,6 +186,15 @@ Creer `apps/frontend/.env.local`:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3001
 ```
+
+Creer ou mettre a jour le premier compte administrateur:
+
+```bash
+cd apps/backend
+npm run admin:create
+```
+
+Ce script utilise `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_FIRST_NAME` et `ADMIN_LAST_NAME`. Il ne nettoie pas la base de donnees.
 
 ### Lancer PostgreSQL
 
@@ -234,6 +250,7 @@ npm run start
 ```bash
 npm run start:dev
 npm run build
+npm run admin:create
 npm run lint
 npm run test
 ```

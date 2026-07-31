@@ -32,6 +32,9 @@ export class AdminController {
   ) {}
 
   @Post('register')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth('access-token')
+  @Roles(Role.ADMIN)
   register(@Body() registerDto: AdminRegisterDto) {
     return this.authService.register(registerDto, Role.ADMIN);
   }
